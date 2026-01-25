@@ -1995,7 +1995,7 @@ void mouse_input_callback(GLFWwindow* window, double x, double y) {
 void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     std::cout << "KEYBOARD INPUT CALLBACK";
     switch (key) {
-        case GLFW_KEY_A:  //code canRotation.rotate(vector3)
+        case GLFW_KEY_A: {  //code canRotation.rotate(vector3)
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getRight();
             movementVector = movementVector * -0.1;
@@ -2003,7 +2003,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
-        case GLFW_KEY_D: 
+        } case GLFW_KEY_D: {
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getRight();
             movementVector = movementVector * 0.1;
@@ -2011,7 +2011,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
-        case GLFW_KEY_S: 
+        } case GLFW_KEY_S: {
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getForward();
             movementVector = movementVector * -0.1;
@@ -2019,7 +2019,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
-        case GLFW_KEY_W: 
+        } case GLFW_KEY_W: {
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getForward();
             movementVector = movementVector * 0.1;
@@ -2027,7 +2027,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
-        case GLFW_KEY_E: 
+        } case GLFW_KEY_E: {
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getUp();
             movementVector = movementVector * 0.1;
@@ -2035,7 +2035,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
-        case GLFW_KEY_Q: 
+        } case GLFW_KEY_Q: {
             windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
             Vector3 movementVector = windowDataObj.camRotation.getUp();
             movementVector = movementVector * -0.1;
@@ -2043,6 +2043,7 @@ void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int acti
             windowDataObj.camPosition.y += movementVector.y;
             windowDataObj.camPosition.z += movementVector.z;
             break;
+        }
     }
     std::cout << std::endl;
 }
