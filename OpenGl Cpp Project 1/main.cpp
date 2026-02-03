@@ -6,6 +6,9 @@
 #include <cmath>
 //for math(sin cos etc)
 #include <iostream>
+
+#include <vector>
+#include <algorithm>
 //for std::cout
 #include <cstring>
 //for memcpy
@@ -1948,6 +1951,7 @@ struct windowData {
     Quaternion camRotation;
     bool firstMouseInput = true;
     Vector3 camPosition = {0.0, 0.0, 0.0};
+    std::vector<int> heldKeys;
 };
 //executes when the size of the window changes
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -1992,64 +1996,81 @@ void mouse_input_callback(GLFWwindow* window, double x, double y) {
 [in]	action	GLFW_PRESS, GLFW_RELEASE or GLFW_REPEAT. Future releases may add more actions.
 [in]	mods	Bit field describing which modifier keys were held down.    */
 
-void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    std::cout << "KEYBOARD INPUT CALLBACK";
+
+
+void held_key_callback(GLFWwindow* window, int key) { //this function is for individual held keys
     switch (key) {
-        case GLFW_KEY_A: {  //code canRotation.rotate(vector3)
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getRight();
-            movementVector = movementVector * -0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        } case GLFW_KEY_D: {
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getRight();
-            movementVector = movementVector * 0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        } case GLFW_KEY_S: {
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getForward();
-            movementVector = movementVector * -0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        } case GLFW_KEY_W: {
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getForward();
-            movementVector = movementVector * 0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        } case GLFW_KEY_E: {
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getUp();
-            movementVector = movementVector * 0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        } case GLFW_KEY_Q: {
-            windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
-            Vector3 movementVector = windowDataObj.camRotation.getUp();
-            movementVector = movementVector * -0.1;
-            windowDataObj.camPosition.x += movementVector.x;
-            windowDataObj.camPosition.y += movementVector.y;
-            windowDataObj.camPosition.z += movementVector.z;
-            break;
-        }
+    case GLFW_KEY_A: {  //code canRotation.rotate(vector3)
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getRight();
+        movementVector = movementVector * -0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
+    } case GLFW_KEY_D: {
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getRight();
+        movementVector = movementVector * 0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
+    } case GLFW_KEY_S: {
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getForward();
+        movementVector = movementVector * -0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
+    } case GLFW_KEY_W: {
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getForward();
+        movementVector = movementVector * 0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
+    } case GLFW_KEY_E: {
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getUp();
+        movementVector = movementVector * 0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
+    } case GLFW_KEY_Q: {
+        windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+        Vector3 movementVector = windowDataObj.camRotation.getUp();
+        movementVector = movementVector * -0.1;
+        windowDataObj.camPosition.x += movementVector.x;
+        windowDataObj.camPosition.y += movementVector.y;
+        windowDataObj.camPosition.z += movementVector.z;
+        break;
     }
-    std::cout << std::endl;
+    }
 }
 
-void held_keys_callback() {
+void held_keys_callback(GLFWwindow* window) { //this function loops through the held key list
+    windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+    for (unsigned int i = 0; i < windowDataObj.heldKeys.size(); i++) {
+        int key = windowDataObj.heldKeys[i];
+        held_key_callback(window, key);
+    }
+}
 
+
+void keyboard_input_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    std::cout << "KEYBOARD INPUT CALLBACK";
+    windowData& windowDataObj = *static_cast<windowData*>(glfwGetWindowUserPointer(window));
+    auto iterator = std::find(windowDataObj.heldKeys.begin(), windowDataObj.heldKeys.end(), key); //the iterator is an "iterator" type
+    if (iterator != windowDataObj.heldKeys.end()) {
+        if (action == GLFW_RELEASE) windowDataObj.heldKeys.erase(iterator);
+    } else {
+        if (action == GLFW_PRESS) windowDataObj.heldKeys.push_back(key);
+    }
+    std::cout << std::endl;
 }
 
 
@@ -2199,10 +2220,9 @@ int main(void)
     GLint position_matrix_location = glad_glGetUniformLocation(shaderProgram, "u_positionMatrix");
 
     while (!glfwWindowShouldClose(window))
-    {
+    {   
         float normalizedSin = sin(static_cast<float>(glfwGetTime()));
         float normalizedCos = cos(static_cast<float>(glfwGetTime()));
-
 
         currentTime = glfwGetTime();
         //background color
@@ -2221,6 +2241,7 @@ int main(void)
         }
         if ((currentTime - lastTime) > FRAME_RATE_DIVISOR) {
             //The fps loop (locked to 60fps)
+            held_keys_callback(window);
             Quaternion oldQ1 = windowDataObj.camRotation;
             lastTime = currentTime;
             rotator.normalize();
